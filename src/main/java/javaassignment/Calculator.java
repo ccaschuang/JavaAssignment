@@ -3,7 +3,6 @@ package javaassignment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import javaassignment.Log;
 /**
  * Calculator:
  *  support add/mult/sub/div 
@@ -25,6 +24,7 @@ import javaassignment.Log;
  * 
  * ex: java -DDebugLevel=DEBUG
  * @author ccaschuang
+ * 
  */
 
 public class Calculator {
