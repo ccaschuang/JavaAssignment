@@ -65,6 +65,7 @@ public class TestCalculator {
             assertEquals(99999,calc.calculate("let(a,1,div(99999,a))"));
             assertEquals(199,  calc.calculate("let(Z,995, div(Z, 5))"));
         }catch(Exception e){
+            e.printStackTrace();
             fail();
         }
     }
@@ -82,10 +83,21 @@ public class TestCalculator {
             assertEquals(40,calc.calculate("let(a, let(b, 10, add(b, b)), let(b, 20, add(a, b))"));
 
         } catch (Exception e) {
+            e.printStackTrace();
             fail();
         }
     }
 
+    @Test
+    public void testComplicateTestCase(){
+        try{
+            assertEquals(24,calc.calculate("add(let(a,4,add(a,4)),let(a, 8,add(a,8)))"));
+            assertEquals(21,  calc.calculate("sub(add(let(a,4,add(a,4)),let(a, 8,add(a,8))), let(b,1,mult(3,b)))"));
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
     //testing that wrong syntax may cause exception
     @Test 
     public void testAssignError(){
@@ -96,7 +108,7 @@ public class TestCalculator {
         } catch (Exception e) {}
 
         try {
-            assertEquals(3,calc.calculate("let(let,,4,add(1, 2))"));
+            assertEquals(3,calc.calculate("let(let,,4,add(1, 2)),let(3))"));
             fail();
 
         } catch (Exception e) {}

@@ -3,6 +3,7 @@ package javaassignment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import javaassignment.Log;
 /**
  * Calculator:
  *  support add/mult/sub/div 
@@ -89,29 +90,43 @@ public class Calculator {
         while( v!= null) {
             log.debug("currentPos: "+ currentPos+ "  getNext:" + v);
             if(LET.equals(v)){
+                stack.push(getNext()); //push "(" inside
                 getLetNumber();
             }else if (")".equals(v)){
-                //Pop and calculate
-                if(stack.size() <3 ){
-                    v=getNext();
-                    continue;
-                }
-                //TODO: sould check that the previous two variable are calcualble or not
+                //Pop until get "("
+                // should always be 1 number (previous assginment )
+                // or 3 element (start calculate
+//                if (stack.size() < 3 ) {
+//                    log.debug("currentPos is " + currentPos + " skip the ) because it may be the problem of let");
+//                    v=getNext();
+//                    continue;
+//                }
+                //TODO: sould check that the previous two variable are calculable or not
+                //INFO  :start to parse formula: let(a, let(b, 10, add(b, b)), let(b, 20, add(a, b))
                 String num2 = stack.pop();
                 String num1 = stack.pop();
-                String arith = stack.pop();
-                stack.add(String.valueOf(cal(arith, num1, num2)));
-                
-                if(isPartial && stack.size() == 1){
-                    return Integer.parseInt(stack.pop());
+                log.debug("num2 = " + num2 + " num1 = "+ num1);
+                if("(".equals(num1)) {
+                    stack.push(num2);
+                    if(isPartial && stack.size() == 1){
+                        return Integer.parseInt(stack.pop());
+                    }
+                }else{
+                    stack.pop(); // remove "("
+                    String arith = stack.pop();
+                    stack.add(String.valueOf(cal(arith, num1, num2)));
+
+                    if(isPartial && stack.size() == 1){
+                        return Integer.parseInt(stack.pop());
+                    }
                 }
-                
-                
+
             }else if("(".equals(v)){
-                //Do nothing
+                stack.add(v);
             }else{
                 stack.add(v);
                 if(isPartial && stack.size()==1 && isNumber(v)){
+                    //if it's let assignment, just return.
                     return Integer.parseInt(stack.pop());
                 }
             }
@@ -121,15 +136,26 @@ public class Calculator {
         if(stack.size() ==1 ){
             return Integer.parseInt(stack.pop());
         }
-        log.debug("Error.... after parsing... still has more than 1 elements inside");
-        while(!stack.empty()){
-            log.debug(stack.pop());
-        }
+        int result = Integer.parseInt(stack.pop());
+        log.debug("Debug.... after parsing... still has more than 1 elements inside: ");
+        log.debug(""+result);
         
-        log.error("invalid methods... can not parse them all");
-        throw new Exception("invalid methods...");
+        boolean isParsingError = false;
+        while(!stack.empty()){
+            String element = stack.pop();
+            log.debug(element);
+            if(!"(".equals(element)){
+                isParsingError = true;
+            }
+        }
+
+        if(isParsingError){
+            log.error("invalid methods... can not parse them all");
+            throw new Exception("invalid methods...");
+        }
+        return result;
     }
-    
+
     /**
      * check that the input is a valid number or not.
      * @param s
@@ -205,11 +231,13 @@ public class Calculator {
                 return String.valueOf(c);
 
             case ',': //skip and return directly
-                currentPos++;
                 if(sb.length() >0){
+                    currentPos++;
                     return sb.toString();
                 }
-                break;
+
+                continue;
+                //break;
             default:
                 sb.append(c);
             }
@@ -222,7 +250,7 @@ public class Calculator {
 
     private void getLetNumber() throws Exception{
         log.debug("getLetNumber");
-        getNext(); // should be "(", just skip it.
+
         String v = getNext();
         Stack<String> stack = new Stack<String>();
         int value = parse(stack, true); //
