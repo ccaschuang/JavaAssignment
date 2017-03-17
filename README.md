@@ -24,6 +24,25 @@ Can see more examples in TestCalculator.java
  can use "DEBUG", "ERROR" if you want to debug
  can use "NONE" if you don't want to see any the logs
  
- ex: java -DDebugLevel=DEBUG
+ ex:
+ java -DDebugLevel=NONE javaassignment.Calculator "add(1,2)"
+ output: 3
+ex2:  
+java -DDebugLevel=DEBUG javaassignment.Calculator "add(1,2)"
+INFO  :start to parse formula: add(1,2)
+DEBUG: currentPos: 3  getNext:add
+DEBUG: currentPos: 4  getNext:(
+DEBUG: currentPos: 6  getNext:1
+DEBUG: currentPos: 7  getNext:2
+DEBUG: currentPos: 8  getNext:)
+DEBUG: num2 = 2 num1 = 1
+DEBUG: calc: 1 add 2
+DEBUG:    1 add 2 =   3
+3
+
+ 
+ 
+
+CI url: https://app.codeship.com/projects/208326
 
 
