@@ -2,12 +2,18 @@ package javaassignment;
 
 public class Log {
 
-    private static final int DEBUG_LEVEL =3;
-    private static final int ERROR_LEVEL =2;
-    private static final int INFO_LEVEL =1;
-    private int debugLevel = 1;// default: info level
-    public Log(){}
+    public static final int DEBUG_LEVEL = 3;
+    public static final int ERROR_LEVEL = 2;
+    public static final int INFO_LEVEL  = 1;
+    public static final int NONE_LEVEL  = 0;
+    public int debugLevel = INFO_LEVEL;// default: info level
     
+    public Log(){}
+
+    public Log(int debugLevel){
+        this.debugLevel = debugLevel;
+    }
+
     public Log(String level){
         if("DEBUG".equals(level)){
             debugLevel = DEBUG_LEVEL;
@@ -17,7 +23,11 @@ public class Log {
             debugLevel = 0;
         } 
     }
-    
+
+    public void setDebugLevel(int debugLevel){
+        this.debugLevel = debugLevel;
+    }
+
     public void info(String s){
         if(debugLevel >= INFO_LEVEL){
             System.out.println("INFO  :"+ s);

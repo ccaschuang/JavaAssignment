@@ -120,6 +120,20 @@ public class TestCalculator {
         } catch (Exception e) {}
     }
     
+    @Test
+    public void testUpperCase(){
+        try {
+            assertEquals(100000, calc.calculate("ADD(99999,1)"));
+            assertEquals(99998,  calc.calculate("SUB(99999,1)"));
+            assertEquals(99999,  calc.calculate("MULT(99999,1)"));
+            assertEquals(10,     calc.calculate("LET(a, 5, ADD(a, a))"));
+            assertEquals(199,    calc.calculate("DIV(995, 5)"));
+        } catch (Exception e) {
+            fail();
+        }
+        
+    }
+    
 //    @Test
 //    public void testCodeShipError(){
 //        fail();

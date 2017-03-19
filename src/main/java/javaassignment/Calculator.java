@@ -14,7 +14,8 @@ import java.util.Stack;
  *   Note: Only support integers:
  *         div(8, 3) will return 2
  * 
- *   Note: add/mult/sub/div/let are reserved words. all in lowercase
+ *   Note: add/mult/sub/div/let are reserved words. which can be uppercase or lowercase.
+ *        but variables are case sensitive.
  * 
  * Debug Level: 
  * using -DDebugLevel to add the debug level
@@ -22,7 +23,7 @@ import java.util.Stack;
  * can use "DEBUG", "ERROR" if you want to debug
  * can use "NONE" if you don't want to see any the logs
  * 
- * ex: java -DDebugLevel=DEBUG
+ * ex: java -DDebugLevel=DEBUG "add(1,2)"
  * @author ccaschuang
  * 
  */
@@ -36,7 +37,8 @@ public class Calculator {
         String dLevel= System.getProperty("DebugLevel");
         log = new Log(dLevel);
     }
-    public static void main(String[] args) throws Exception {
+
+    public static final void main(String[] args) throws Exception {
         Calculator calc = new Calculator();
         String dLevel= System.getProperty("DebugLevel");
         
@@ -85,24 +87,14 @@ public class Calculator {
         }else{
             log.info("start to parse formula: "+ formula );
         }
-        
+
         String v= getNext();
         while( v!= null) {
             log.debug("currentPos: "+ currentPos+ "  getNext:" + v);
-            if(LET.equals(v)){
+            if(LET.equals(v) || LET.equals(v.toLowerCase())){
                 stack.push(getNext()); //push "(" inside
                 getLetNumber();
             }else if (")".equals(v)){
-                //Pop until get "("
-                // should always be 1 number (previous assginment )
-                // or 3 element (start calculate
-//                if (stack.size() < 3 ) {
-//                    log.debug("currentPos is " + currentPos + " skip the ) because it may be the problem of let");
-//                    v=getNext();
-//                    continue;
-//                }
-                //TODO: sould check that the previous two variable are calculable or not
-                //INFO  :start to parse formula: let(a, let(b, 10, add(b, b)), let(b, 20, add(a, b))
                 String num2 = stack.pop();
                 String num1 = stack.pop();
                 log.debug("num2 = " + num2 + " num1 = "+ num1);
@@ -130,6 +122,7 @@ public class Calculator {
                     return Integer.parseInt(stack.pop());
                 }
             }
+
             v=getNext();
         }
 
@@ -149,7 +142,7 @@ public class Calculator {
             }
         }
 
-        if(isParsingError){
+        if(isParsingError) {
             log.error("invalid methods... can not parse them all");
             throw new Exception("invalid methods...");
         }
@@ -176,6 +169,7 @@ public class Calculator {
         int n1 = getNumber(num1);
         int n2 = getNumber(num2);
         
+        arith = arith.toLowerCase();
         if(ADD.equals(arith)){
             log.debug("   " + num1+ " " + arith+" " + num2+ " =   " + (n1+n2)) ;
             return n1+n2;
@@ -221,7 +215,6 @@ public class Calculator {
             switch(c){
             case ' ': //ignore
                 continue;
-            
             case '(':
             case ')':
                 if(sb.length() != 0){
@@ -259,4 +252,3 @@ public class Calculator {
         log.debug("put " + v + " = "+ value+ " to the let map");
     }
 }
-
