@@ -6,6 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
+import javaassignment.error.DivZeroException;
+
 public class TestCalculator {
 
     Calculator calc;
@@ -49,14 +51,25 @@ public class TestCalculator {
     }
 
     @Test
-    public void testDiv() {
+    public void testDiv()  {
         try{
             assertEquals(99999,calc.calculate("div(99999,1)"));
             assertEquals(199,  calc.calculate("div(995, 5)"));
             assertEquals(2, calc.calculate("div(8, 3)")); // should be 2  not 2.66
+            
         }catch(Exception e){
             fail();
         }
+
+        try{
+            calc.calculate("div(1,0)");
+            fail();
+        }catch(DivZeroException e){
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+
     }
 
     @Test

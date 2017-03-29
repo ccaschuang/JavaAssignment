@@ -3,6 +3,8 @@ package javaassignment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+
+import javaassignment.error.DivZeroException;
 /**
  * Calculator:
  *  support add/mult/sub/div 
@@ -183,6 +185,10 @@ public class Calculator {
             return n1 * n2;
         }
         if(DIV.equals(arith)){
+            if(n2 == 0){
+                log.error("   " + num1+ " " + arith+" " + num2+ " DivZeroException") ;
+                throw new DivZeroException();
+            }
             log.debug("   " + num1+ " " + arith+" " + num2+ " =   " + (n1 / n2)) ;
             return n1 / n2;
         }
